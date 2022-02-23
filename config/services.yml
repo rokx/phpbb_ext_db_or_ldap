@@ -1,0 +1,15 @@
+services:
+    auth.provider.db_or_ldap:
+        class: rokx\dborldap\auth\provider\db_or_ldap
+        arguments:
+            - '@captcha.factory'
+            - '@config'
+            - '@dbal.conn'
+            - '@passwords.manager'
+            - '@request'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '@language'
+        tags:
+            - { name: auth.provider }

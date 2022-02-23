@@ -1,0 +1,32 @@
+{
+	"name": "rokx/dborldap",
+	"type": "phpbb-extension",
+	"description": "phpBB 3.3 extension to provide login with db or ldap",
+	"homepage": "https://github.com/rokx/phpbb_ext_db_or_ldap",
+	"version": "1.0.0",
+	"time": "2022-02-23",
+        "keywords": ["phpbb", "extension", "ldap", "db", "login"],
+	"license": "GPL-2.0-only",
+	"authors": [{
+			"name": "rokx",
+			"email": "dborldap@banko.cloud",
+			"homepage": "https://banko.cloud",
+			"role": "Developer"
+		}],
+	"require": {
+		"php": ">=5.6"
+	},
+	"require-dev": {
+	},
+	"extra": {
+		"display-name": "Db Ldap Login",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.3.0"
+		},
+		"version-check": {
+			"host": "www.phpbb.com",
+			"directory": "/version",
+			"filename": "version_check.json"
+		}
+	}
+}
