@@ -1,5 +1,5 @@
 services:
-    auth.provider.db_or_ldap:
+    rokx.provider.dborldap:
         class: rokx\dborldap\auth\provider\db_or_ldap
         arguments:
             - '@captcha.factory'

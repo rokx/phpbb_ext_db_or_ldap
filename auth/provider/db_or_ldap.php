@@ -304,7 +304,7 @@ class db_or_ldap extends base
 			}
 
 			$sql = 'DELETE FROM ' . LOGIN_ATTEMPT_TABLE . '
-				WHERE user_id = ' . $row['user_id'];
+				WHERE user_id = ' . this->db->sql_escape($row['user_id']);
 			$this->db->sql_query($sql);
 
 			if ($row['user_login_attempts'] != 0)
@@ -312,7 +312,7 @@ class db_or_ldap extends base
 				// Successful, reset login attempts (the user passed all stages)
 				$sql = 'UPDATE ' . USERS_TABLE . '
 					SET user_login_attempts = 0
-					WHERE user_id = ' . $row['user_id'];
+					WHERE user_id = ' . this->db->sql_escape($row['user_id']);
 				$this->db->sql_query($sql);
 			}
 
