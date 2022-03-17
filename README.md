@@ -25,6 +25,7 @@ You can install this on the latest release of phpBB by following the steps below
 
 ## Support
 
+* If you are stuck logging in you can reset the authentication method in the database -> phpbb_config table -> row 'auth_method' set value to Ldap or Db
 * Report bugs and other issues to the [Issue Tracker](https://github.com/rokx/phpbb_ext_db_or_ldap/issues).
 
 ## License

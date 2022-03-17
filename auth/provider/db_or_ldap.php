@@ -211,18 +211,6 @@ class db_or_ldap extends base
 			$result = $this->db->sql_query($sql);
 			$attempts = (int) $this->db->sql_fetchfield('attempts');
 			$this->db->sql_freeresult($result);
-
-			$attempt_data = array(
-				'attempt_ip'			=> $this->user->ip,
-				'attempt_browser'		=> trim(substr($this->user->browser, 0, 149)),
-				'attempt_forwarded_for'	=> $this->user->forwarded_for,
-				'attempt_time'			=> time(),
-				'user_id'				=> ($row) ? (int) $row['user_id'] : 0,
-				'username'				=> $username,
-				'username_clean'		=> $username_clean,
-			);
-			$sql = 'INSERT INTO ' . LOGIN_ATTEMPT_TABLE . $this->db->sql_build_array('INSERT', $attempt_data);
-			$this->db->sql_query($sql);
 		}
 		else
 		{
@@ -304,7 +292,7 @@ class db_or_ldap extends base
 			}
 
 			$sql = 'DELETE FROM ' . LOGIN_ATTEMPT_TABLE . '
-				WHERE user_id = ' . this->db->sql_escape($row['user_id']);
+				WHERE user_id = ' . $row['user_id'];
 			$this->db->sql_query($sql);
 
 			if ($row['user_login_attempts'] != 0)
@@ -312,7 +300,7 @@ class db_or_ldap extends base
 				// Successful, reset login attempts (the user passed all stages)
 				$sql = 'UPDATE ' . USERS_TABLE . '
 					SET user_login_attempts = 0
-					WHERE user_id = ' . this->db->sql_escape($row['user_id']);
+					WHERE user_id = ' . $row['user_id'];
 				$this->db->sql_query($sql);
 			}
 
@@ -410,6 +398,12 @@ class db_or_ldap extends base
 						);
 					}
 
+                    // Successful, reset login attempts (the user passed all stages)
+                    $sql = 'UPDATE ' . USERS_TABLE . '
+                        SET user_login_attempts = 0
+                        WHERE user_id = ' . $row['user_id'];
+                    $this->db->sql_query($sql);
+
 					// Successful login... set user_login_attempts to zero...
 					return array(
 						'status'		=> LOGIN_SUCCESS,
@@ -433,6 +427,8 @@ class db_or_ldap extends base
 						trigger_error('NO_GROUP');
 					}
 
+					unset($ldap_result);                    
+                    
 					// generate user account data
 					$ldap_user_row = array(
 						'username'		=> $username,
@@ -443,8 +439,6 @@ class db_or_ldap extends base
 						'user_ip'		=> $this->user->ip,
 						'user_new'		=> ($this->config['new_member_post_limit']) ? 1 : 0,
 					);
-
-					unset($ldap_result);
 
 					// this is the user's first login so create an empty profile
 					return array(
@@ -477,12 +471,27 @@ class db_or_ldap extends base
 				AND user_login_attempts < ' . LOGIN_ATTEMPTS_MAX;
 		$this->db->sql_query($sql);
 
+
+        $attempt_data = array(
+            'attempt_ip'			=> $this->user->ip,
+            'attempt_browser'		=> trim(substr($this->user->browser, 0, 149)),
+            'attempt_forwarded_for'	=> $this->user->forwarded_for,
+            'attempt_time'			=> time(),
+            'user_id'				=> ($row) ? (int) $row['user_id'] : 0,
+            'username'				=> $username,
+            'username_clean'		=> $username_clean,
+        );
+        $sql = 'INSERT INTO ' . LOGIN_ATTEMPT_TABLE . $this->db->sql_build_array('INSERT', $attempt_data);
+        $this->db->sql_query($sql);
+
 		// Give status about wrong password...
 		return array(
 			'status'		=> ($show_captcha) ? LOGIN_ERROR_ATTEMPTS : LOGIN_ERROR_PASSWORD,
 			'error_msg'		=> 'LOGIN_ERROR_PASSWORD',
 			'user_row'		=> $row,
 		);
+        
+        
 	
     }
 
