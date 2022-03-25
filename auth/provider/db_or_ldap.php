@@ -245,12 +245,6 @@ class db_or_ldap extends base
 					'user_row'		=> array('user_id' => ANONYMOUS),
 				);
 			}
-
-			return array(
-				'status'	=> LOGIN_ERROR_USERNAME,
-				'error_msg'	=> 'LOGIN_ERROR_USERNAME',
-				'user_row'	=> array('user_id' => ANONYMOUS),
-			);
 		}
 
 		// If there are too many login attempts, we need to check for a confirm image
